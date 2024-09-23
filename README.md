@@ -84,7 +84,6 @@ LLMFlow leverages TypeScript's generic types to ensure type safety when defining
 ```typescript
 const flow = createLLMFlow<{ name: string; age: number }, UserProfile>(
 "Generate a user profile for {name}, age {age}",
-['name', 'age'],
 { model: 'gpt-4o-2024-05-13' }
 );
 ```
@@ -106,7 +105,6 @@ TypeScript catches potential errors at compile-time:
 // TypeScript will catch these errors:
 const flow = createLLMFlow<{ topic: number }, string>( // Error: 'topic' should be string
 "Write about {topic}",
-['topic'],
 { model: 'invalid-model' } // Error: 'invalid-model' is not a valid model option
 );
 ```
@@ -121,7 +119,6 @@ storePath: string;
 }
 const flow = createLLMFlow<InputType, OutputType>(
 template,
-inputVariables,
 llmOptions,
 versioningOptions
 );
@@ -131,7 +128,6 @@ TypeScript's type inference works seamlessly with LLMFlow:
 ```typescript
 const flow = createLLMFlow(
 "Summarize this text: {text}",
-['text'],
 { model: 'gpt-4o-2024-05-13' }
 );
 // TypeScript infers: LLMFlow<{ text: string }, string>
