@@ -82,13 +82,13 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
 
 ## Key Features
 
-1. \*\*Type Inference\*\*: LLMFlow automatically infers input and output types based on the prompt template and expected JSON structure.
+1. Type Inference: LLMFlow automatically infers input and output types based on the prompt template and expected JSON structure.
 
-2. \*\*Structured Output\*\*: The flow is designed to return a specific JSON structure, which is automatically parsed by the library.
+2. Structured Output: The flow is designed to return a specific JSON structure, which is automatically parsed by the library.
 
-3. \*\*Flexible Input\*\*: The flow accepts multiple input parameters (\`prompt\` and \`tools\`) which are inserted into the prompt template.
+3. Flexible Input: The flow accepts multiple input parameters (\`prompt\` and \`tools\`) which are inserted into the prompt template.
 
-4. \*\*Error Handling\*\*: The example includes basic error handling to catch any issues during flow execution.
+4. Error Handling: The example includes basic error handling to catch any issues during flow execution.
 
 ## Notes
 
