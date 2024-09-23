@@ -1,0 +1,14 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(ts|tsx)$": "babel-jest",
+    "^.+\\.(js|jsx)$": "babel-jest"
+  },
+  "testEnvironment": "node",
+  "setupFiles": ["dotenv/config"],
+  "transformIgnorePatterns": [
+    "/node_modules/(?!(unified|remark-parse|remark-stringify|strip-markdown)/)"
+  ]
+}
