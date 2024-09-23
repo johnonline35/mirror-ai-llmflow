@@ -58,9 +58,7 @@ LLMFlow's TypeScript integration provides intelligent autocompletion for version
 With this setup, each time you run your flow, LLMFlow will:
 
 - Automatically version your prompt template
-  
 - Generate a commit message describing the changes
-  
 - Store the versioned prompt in the specified checkpoint directory
 
 This allows you to track the evolution of your prompts over time, rollback to previous versions if needed, and maintain a clear history of your prompt engineering process - all integrated seamlessly into your development workflow.
