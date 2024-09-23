@@ -22,7 +22,7 @@ const modelServiceMap: { [key in Models]: () => Promise<LLM> } = {
     import("./llm-providers/anthropic/anthropic.service").then(
       (m) => new m.AnthropicService()
     ),
-  "claude-3-sonnet-20240229": () =>
+  "claude-3.5-sonnet-20240307": () =>
     import("./llm-providers/anthropic/anthropic.service").then(
       (m) => new m.AnthropicService()
     ),

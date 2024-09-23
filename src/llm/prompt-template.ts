@@ -19,14 +19,3 @@ export function formatPrompt<TInput extends Record<string, string>>(
     (_, key) => String(input[key as keyof TInput]) || ""
   );
 }
-
-// export class PromptTemplate<TInput> {
-//   constructor(private template: string) {}
-
-//   generate(input: TInput): string {
-//     return this.template.replace(
-//       /\{(\w+)\}/g,
-//       (_, key) => (input as any)[key] || ""
-//     );
-//   }
-// }

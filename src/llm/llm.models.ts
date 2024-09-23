@@ -16,7 +16,7 @@ export type OpenAIModels =
  */
 export type AnthropicModels =
   | "claude-3-opus-20240229"
-  | "claude-3-sonnet-20240229"
+  | "claude-3.5-sonnet-20240307"
   | "claude-3-haiku-20240307";
 
 // HuggingFace models
