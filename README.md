@@ -11,27 +11,35 @@ LLMFlow is built with TypeScript and provides first-class TypeScript support out
 Import the necessary functions:
 
 ```typescript
-import { createLLMFlow } from '@mirror-ai/llmflow';
+import { createLLMFlow } from 'llm-flow';
 ```
 
 Create an LLMFlow instance:
 
 ```typescript
-const flow = createLLMFlow<{ topic: string }, string>(
-"Write a short paragraph about {topic}",
-['topic'],
+const flow = createLLMFlow<{ topic: string; length: number }, string>(
+"Write a {length}-word paragraph about {topic}",
+['topic', 'length'],
 { model: 'gpt-4o-2024-05-13', maxTokens: 100 }
 );
 ```
-Notice how TypeScript generics are used to define input and output types, ensuring type safety.
+This example demonstrates several key advantages of LLMFlow's TypeScript integration:
+
+Type Safety: TypeScript generics define the input type as an object with `topic` (string) and `length` (number) properties, and the output type as a string.
+Template Validation: The array `['topic', 'length']` ensures that all placeholders in the template string are accounted for. If you mistype a placeholder or forget to include it in the array, TypeScript will raise an error.
+Autocomplete: When using this `flow` object, your IDE will provide autocomplete suggestions for the input object, showing both 'topic' and 'length' as required properties.
+Mistake Prevention: If you try to use a placeholder in the template that isn't defined in your input type (e.g., '{author}'), TypeScript will flag this as an error.
+Flexibility: You can easily add or remove parameters by updating both the input type and the array, ensuring they stay in sync.
+
 
 Run the flow:
 
 ```typescript
-const result = await flow.run({ topic: 'artificial intelligence' });
+const result = await flow.run({ topic: 'artificial intelligence', length: 50 });
 console.log(result);
 ```
-TypeScript will ensure that you provide the correct input type (an object with a `topic` property of type `string`) and that the `result` is treated as a `string`.
+TypeScript ensures that you provide the correct input type (an object with `topic` and `length` properties) and that the `result` is treated as a `string`.
+This structure provides a robust, type-safe way to define and use prompt templates, reducing errors and improving developer experience.
 ## Advanced Features
 ### Versioning
 Enable versioning to keep track of your prompt templates and LLM configurations:
