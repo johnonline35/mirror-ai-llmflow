@@ -1,8 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { LLM, LLMOptions } from "../../llm.interface";
 import { Logger, ErrorHandler, CallerDetailsFetcher } from "../../llm-utils";
-import * as dotenv from "dotenv";
-dotenv.config();
+import { config } from "../../common/utils/config";
 
 export class AnthropicService implements LLM {
   private anthropic: Anthropic;
@@ -11,7 +10,7 @@ export class AnthropicService implements LLM {
   private callerDetailsFetcher: CallerDetailsFetcher;
 
   constructor() {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = config.anthropic.apiKey;
     if (!apiKey) {
       throw new Error(
         "ANTHROPIC_API_KEY is not set in the environment variables"
