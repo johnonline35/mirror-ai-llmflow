@@ -38,16 +38,30 @@ TypeScript ensures that you provide the correct input type (an object with `topi
 This structure provides a robust, type-safe way to define and use prompt templates, reducing errors and improving developer experience.
 ## Advanced Features
 ### Versioning
+Prompts in LLMFlow are treated as parameters of a machine learning model. The process of prompt engineering involves multiple iterations, similar to hyperparameter tuning in traditional machine learning. LLMFlow provides robust tooling for this iterative process, treating prompts as first-class citizens in your ML pipeline.
+LLMFlow offers automatic versioning and serialization of prompts through static and dynamic analysis. It uses the `gpt-4o-mini` model to generate auto-commit messages directly to a local store. This process is analogous to `checkpointing` in a machine learning training loop, but it doesn't require any special IDE or editor - it's all handled seamlessly within your TypeScript code.
 Enable versioning to keep track of your prompt templates and LLM configurations:
 ```typescript
 const flowWithVersioning = createLLMFlow<{ topic: string }, string>(
 "Write a short paragraph about {topic}",
 ['topic'],
 { model: 'gpt-4o-2024-05-13', maxTokens: 100 },
-{ versioningEnabled: true, storePath: './custom-prompt-versions' }
+{ versioningEnabled: true, storePath: './prompt-checkpoints' }
 );
 ```
-TypeScript helps here by providing autocompletion for the versioning options and catching any typos or type mismatches.
+In this example:
+
+`versioningEnabled: true` activates the automatic versioning system.
+`storePath: './prompt-checkpoints'` specifies the local directory where prompt versions will be stored, similar to saving model checkpoints.
+
+LLMFlow's TypeScript integration provides intelligent autocompletion for versioning options, catching potential typos or type mismatches at compile-time. This ensures that your prompt versioning configuration is always valid, reducing errors in your ML pipeline.
+With this setup, each time you run your flow, LLMFlow will:
+
+Automatically version your prompt template
+Generate a commit message describing the changes
+Store the versioned prompt in the specified checkpoint directory
+
+This allows you to track the evolution of your prompts over time, rollback to previous versions if needed, and maintain a clear history of your prompt engineering process - all integrated seamlessly into your development workflow.
 ### Multiple LLM Providers
 LLMFlow supports various LLM providers. Simply specify the model in the options:
 ```typescript
