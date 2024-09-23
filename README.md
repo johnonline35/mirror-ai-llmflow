@@ -149,20 +149,9 @@ LLMFlow uses API keys for OpenAI and Anthropic services. These keys should be se
 Example:
 export OPENAI_API_KEY=your_openai_api_key
 export ANTHROPIC_API_KEY=your_anthropic_api_key
-Copy
+
 The service automatically loads these keys from environment variables:
 
-```typescript
-export const config: Config = {
-  openai: {
-    apiKey: process.env.OPENAI_API_KEY || "",
-  },
-  anthropic: {
-    apiKey: process.env.ANTHROPIC_API_KEY || "",
-  },
-};
-Ensure both keys are set correctly for full functionality. Keep your API keys secure and never expose them in your code or version control.
-```
 ## Best Practices
 
 Leverage TypeScript's type system to define clear interfaces for your input and output types.
