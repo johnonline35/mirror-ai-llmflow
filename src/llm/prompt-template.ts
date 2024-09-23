@@ -1,13 +1,11 @@
 export type PromptTemplate<TInput extends Record<string, string>> = {
   template: string;
-  inputVariables: (keyof TInput)[];
 };
 
 export function createPromptTemplate<TInput extends Record<string, string>>(
-  template: string,
-  inputVariables: (keyof TInput)[]
+  template: string
 ): PromptTemplate<TInput> {
-  return { template, inputVariables };
+  return { template };
 }
 
 export function formatPrompt<TInput extends Record<string, string>>(

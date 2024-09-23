@@ -19,7 +19,6 @@ interface PromptVersion<TInput extends Record<string, string>> {
   id: string;
   timestamp: number;
   template: string;
-  inputVariables: (keyof TInput)[];
   options: LLMOptions;
 }
 
@@ -85,7 +84,6 @@ export class LLMFlow<TInput extends Record<string, string>, TOutput = string> {
       id: this.versionId,
       timestamp: Date.now(),
       template: this.promptTemplate.template,
-      inputVariables: this.promptTemplate.inputVariables,
       options: this.options,
     };
 
@@ -103,11 +101,10 @@ export function createLLMFlow<
   TOutput = string
 >(
   template: string,
-  inputVariables: (keyof TInput)[],
   options: LLMOptions,
   versioningOptions?: Partial<VersioningOptions>
 ): LLMFlow<TInput, TOutput> {
-  const promptTemplate = createPromptTemplate<TInput>(template, inputVariables);
+  const promptTemplate = createPromptTemplate<TInput>(template);
   return new LLMFlow<TInput, TOutput>(
     promptTemplate,
     options,
