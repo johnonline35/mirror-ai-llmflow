@@ -35,38 +35,38 @@ console.log(result);
 TypeScript ensures that you provide the correct input type (an object with `topic` and `length` properties) and that the `result` is treated as a `string`.
 This structure provides a robust, type-safe way to define and use prompt templates, reducing errors and improving developer experience.
 
-\# Advanced Usage: JSON Output and Complex Flows
+## Advanced Usage: JSON Output and Complex Flows
 
 LLMFlow can handle complex scenarios where structured output is required. This example demonstrates how to create a flow that assesses whether a user's prompt is possible given a set of available tools, returning a JSON object with a boolean \`success\` flag and a \`feedback\` string.
 
-\## Creating a Complex Flow
+## Creating a Complex Flow
 
-\```typescript
+```typescript
 import { createLLMFlow } from 'llm-flow';
 
 const assessmentFlow = createLLMFlow(
-  \`Assess whether the user prompt "{prompt}" is possible given the following tools: {tools}.
+  `Assess whether the user prompt "{prompt}" is possible given the following tools: {tools}.
    Your response should include a valid JSON object with two keys:
    "success": boolean (true if the prompt is possible, false otherwise)
    "feedback": string (explanation of your assessment)
    
-   Respond only with the JSON object, no additional text.\`,
+   Respond only with the JSON object, no additional text.`,
   {
     model: 'gpt-4-2024-05-13',
     maxTokens: 150,
     temperature: 0.2
   }
 );
-\```
+```
 
 This creates a flow that:
 - Takes a user prompt and a list of available tools as input
 - Instructs the LLM to assess the feasibility of the prompt
 - Returns a JSON object with \`success\` and \`feedback\` fields
 
-\## Running the Flow
+## Running the Flow
 
-\```typescript
+```typescript
 const userPrompt = "Generate a 3D model of a house";
 const availableTools = ["Text generation", "Image generation", "Code completion"];
 
@@ -78,9 +78,9 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
   .catch((error) => {
     console.log('Error in assessment:', error);
   });
-\```
+```
 
-\## Key Features
+## Key Features
 
 1. \*\*Type Inference\*\*: LLMFlow automatically infers input and output types based on the prompt template and expected JSON structure.
 
@@ -90,7 +90,7 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
 
 4. \*\*Error Handling\*\*: The example includes basic error handling to catch any issues during flow execution.
 
-\## Notes
+## Notes
 
 - The library parses the LLM's response as JSON automatically. If parsing fails, it will return the raw string response.
 - Adjust the \`maxTokens\` and \`temperature\` settings as needed for your specific use case.
