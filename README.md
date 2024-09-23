@@ -27,10 +27,6 @@ This example demonstrates several key advantages of LLMFlow's TypeScript integra
 
 Type Safety: TypeScript generics define the input type as an object with `topic` (string) and `length` (number) properties, and the output type as a string.
 Template Validation: The array `['topic', 'length']` ensures that all placeholders in the template string are accounted for. If you mistype a placeholder or forget to include it in the array, TypeScript will raise an error.
-Autocomplete: When using this `flow` object, your IDE will provide autocomplete suggestions for the input object, showing both 'topic' and 'length' as required properties.
-Mistake Prevention: If you try to use a placeholder in the template that isn't defined in your input type (e.g., '{author}'), TypeScript will flag this as an error.
-Flexibility: You can easily add or remove parameters by updating both the input type and the array, ensuring they stay in sync.
-
 
 Run the flow:
 
