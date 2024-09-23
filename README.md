@@ -39,7 +39,7 @@ This structure provides a robust, type-safe way to define and use prompt templat
 
 LLMFlow can handle complex scenarios where structured output is required. This example demonstrates how to create a flow that assesses whether a user's prompt is possible given a set of available tools, returning a JSON object with a boolean \`success\` flag and a \`feedback\` string.
 
-## Creating a Complex Flow
+# Creating a Complex Flow
 
 ```typescript
 import { createLLMFlow } from 'llm-flow';
@@ -64,7 +64,7 @@ This creates a flow that:
 - Instructs the LLM to assess the feasibility of the prompt
 - Returns a JSON object with \`success\` and \`feedback\` fields
 
-## Running the Flow
+# Running the Flow
 
 ```typescript
 const userPrompt = "Generate a 3D model of a house";
