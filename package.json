@@ -1,7 +1,7 @@
 {
   "name": "@mirror-ai/llmflow",
-  "version": "1.0.2",
-  "description": "LLFlow is a typescript native library for creating and managing large language models.",
+  "version": "1.0.4",
+  "description": "LLMFlow is a TypeScript-native library for seamless integration, orchestration, and management of Large Language Models (LLMs).",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -13,6 +13,7 @@
     }
   },
   "private": false,
+  "public": true,
   "sideEffects": false,
   "scripts": {
     "build": "rollup -c",
