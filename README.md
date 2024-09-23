@@ -25,7 +25,6 @@ const flow = createLLMFlow<{ topic: string; length: number }, string>(
 This example demonstrates several key advantages of LLMFlow's TypeScript integration:
 
 Type Safety: TypeScript generics define the input type as an object with `topic` (string) and `length` (number) properties, and the output type as a string.
-Template Validation: The array `['topic', 'length']` ensures that all placeholders in the template string are accounted for. If you mistype a placeholder or forget to include it in the array, TypeScript will raise an error.
 
 Run the flow:
 
