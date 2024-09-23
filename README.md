@@ -139,15 +139,29 @@ const flow = createLLMFlow(
 );
 // TypeScript infers: LLMFlow<{ text: string }, string>
 ```
-### 7. Union Types for Strict Options
-LLMFlow uses union types to enforce strict option values:
+###  API Key Configuration for LLMFlow
+
+LLMFlow uses API keys for OpenAI and Anthropic services. These keys should be set as environment variables:
+
+1. Set `OPENAI_API_KEY` for OpenAI services
+2. Set `ANTHROPIC_API_KEY` for Anthropic services
+
+Example:
+export OPENAI_API_KEY=your_openai_api_key
+export ANTHROPIC_API_KEY=your_anthropic_api_key
+Copy
+The service automatically loads these keys from environment variables:
+
 ```typescript
-type Temperature = 0 | 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
-const flow = createLLMFlow(
-template,
-inputVars,
-{ model: 'gpt-4o-2024-05-13', temperature: 0.7 } // Only valid temperature values are allowed
-);
+export const config: Config = {
+  openai: {
+    apiKey: process.env.OPENAI_API_KEY || "",
+  },
+  anthropic: {
+    apiKey: process.env.ANTHROPIC_API_KEY || "",
+  },
+};
+Ensure both keys are set correctly for full functionality. Keep your API keys secure and never expose them in your code or version control.
 ```
 ## Best Practices
 
