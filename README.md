@@ -18,9 +18,8 @@ Create an LLMFlow instance:
 
 ```typescript
 const flow = createLLMFlow<{ topic: string; length: number }, string>(
-"Write a {length}-word paragraph about {topic}",
-['topic', 'length'],
-{ model: 'gpt-4o-2024-05-13', maxTokens: 100 }
+  "Write a {length}-word paragraph about {topic}",
+  { model: 'gpt-4-2024-05-13', maxTokens: 100 }
 );
 ```
 This example demonstrates several key advantages of LLMFlow's TypeScript integration:
@@ -42,10 +41,9 @@ Prompts in LLMFlow are treated as parameters of a machine learning model. The pr
 LLMFlow offers automatic versioning and serialization of prompts through static and dynamic analysis. 
 Enable versioning to keep track of your prompt templates and LLM configurations:
 ```typescript
-const flowWithVersioning = createLLMFlow<{ topic: string }, string>(
-"Write a short paragraph about {topic}",
-['topic'],
-{ model: 'gpt-4o-2024-05-13', maxTokens: 100 },
+const flowWithVersioning = createLLMFlow<{ topic: string; length: number }, string>(
+  "Write a {length}-word paragraph about {topic}",
+  { model: 'gpt-4-2024-05-13', maxTokens: 100 },
 { versioningEnabled: true, storePath: './prompt-checkpoints' }
 );
 ```
