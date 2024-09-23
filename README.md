@@ -38,8 +38,8 @@ TypeScript ensures that you provide the correct input type (an object with `topi
 This structure provides a robust, type-safe way to define and use prompt templates, reducing errors and improving developer experience.
 ## Advanced Features
 ### Versioning
-Prompts in LLMFlow are treated as parameters of a machine learning model. The process of prompt engineering involves multiple iterations, similar to hyperparameter tuning in traditional machine learning. LLMFlow provides robust tooling for this iterative process, treating prompts as first-class citizens in your ML pipeline.
-LLMFlow offers automatic versioning and serialization of prompts through static and dynamic analysis. It uses the `gpt-4o-mini` model to generate auto-commit messages directly to a local store. This process is analogous to `checkpointing` in a machine learning training loop, but it doesn't require any special IDE or editor - it's all handled seamlessly within your TypeScript code.
+Prompts in LLMFlow are treated as parameters of a machine learning model. The process of prompt engineering involves multiple iterations, similar to hyperparameter tuning in traditional machine learning.
+LLMFlow offers automatic versioning and serialization of prompts through static and dynamic analysis. 
 Enable versioning to keep track of your prompt templates and LLM configurations:
 ```typescript
 const flowWithVersioning = createLLMFlow<{ topic: string }, string>(
