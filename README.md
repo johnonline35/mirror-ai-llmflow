@@ -2,7 +2,7 @@
 LLMFlow is a powerful and flexible TypeScript-first library for working with Language Models (LLMs) in your Node.js applications. It provides an intuitive, type-safe interface for creating, managing, and executing prompts with various LLM providers.
 ## Installation
 ```bash
-npm install llm-flow
+npm i @mirror-ai/llmflow
 ```
 ## TypeScript Support
 LLMFlow is built with TypeScript and provides first-class TypeScript support out of the box. This native TypeScript integration offers several key advantages that we'll explore throughout this guide.
@@ -11,7 +11,7 @@ LLMFlow is built with TypeScript and provides first-class TypeScript support out
 Import the necessary functions:
 
 ```typescript
-import { createLLMFlow } from 'llm-flow';
+import { createLLMFlow } from '@mirror-ai/llmflow';
 ```
 
 Create an LLMFlow instance:
