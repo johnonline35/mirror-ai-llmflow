@@ -39,7 +39,7 @@ This structure provides a robust, type-safe way to define and use prompt templat
 
 LLMFlow can handle complex scenarios where structured output is required. This example demonstrates how to create a flow that assesses whether a user's prompt is possible given a set of available tools, returning a JSON object with a boolean \`success\` flag and a \`feedback\` string.
 
-# Creating a Complex Flow
+### Creating a Complex Flow
 
 ```typescript
 import { createLLMFlow } from 'llm-flow';
@@ -64,7 +64,7 @@ This creates a flow that:
 - Instructs the LLM to assess the feasibility of the prompt
 - Returns a JSON object with \`success\` and \`feedback\` fields
 
-# Running the Flow
+### Running the Flow
 
 ```typescript
 const userPrompt = "Generate a 3D model of a house";
@@ -90,7 +90,7 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
 
 4. Error Handling: The example includes basic error handling to catch any issues during flow execution.
 
-## Notes
+### Notes
 
 - The library parses the LLM's response as JSON automatically. If parsing fails, it will return the raw string response.
 - Adjust the \`maxTokens\` and \`temperature\` settings as needed for your specific use case.
@@ -98,7 +98,7 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
 
 By leveraging LLMFlow's capabilities, you can create complex, type-safe interactions with language models that produce structured data, making it easier to integrate LLM outputs into your applications.
 
-## Other Features
+### Other Features
 ### Versioning
 Prompts in LLMFlow are treated as parameters of a machine learning model. The process of prompt engineering involves multiple iterations, similar to hyperparameter tuning in traditional machine learning.
 LLMFlow offers automatic versioning and serialization of prompts through static and dynamic analysis. 
