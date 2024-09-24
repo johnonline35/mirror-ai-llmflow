@@ -99,6 +99,106 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
 
 By leveraging LLMFlow's capabilities, you can create complex, type-safe interactions with language models that produce structured data, making it easier to integrate LLM outputs into your applications.
 
+# LLMFlow Quickstart Guide - Inline Options
+
+## Using LLMOptions Inline
+
+LLMFlow allows you to specify options directly when creating a flow. Here's how to use some of the key options inline:
+
+```typescript
+import { createLLMFlow } from '@mirror-ai/llmflow';
+
+const flow = createLLMFlow<{ topic: string }, string>(
+  "Write a short paragraph about {topic}",
+  {
+    model: 'gpt-4-2024-05-13',
+    maxTokens: 100,
+    temperature: 0.7,
+    topP: 0.9,
+    frequencyPenalty: 0.5,
+    presencePenalty: 0.5,
+    stopSequences: ['\n', 'END'],
+    responseFormat: 'text',
+    stream: false
+  }
+);
+
+// Usage
+const result = await flow.run({ topic: 'artificial intelligence' });
+console.log(result);
+```
+
+### Key Inline Options:
+
+- `model`: Specifies the LLM (e.g., 'gpt-4-2024-05-13', 'claude-3-opus-20240229')
+- `maxTokens`: Limits response length
+- `temperature`: Controls randomness (0-1)
+- `topP`: Nucleus sampling (0-1)
+- `frequencyPenalty` and `presencePenalty`: Adjust repetition (-2.0 to 2.0)
+- `stopSequences`: Array of stop strings
+- `responseFormat`: 'text' or 'json_object'
+- `stream`: Enable streaming (boolean)
+
+## Advanced Inline Examples
+
+### JSON Output
+
+```typescript
+const jsonFlow = createLLMFlow<{ key1: string, key2: string }, JsonOutputType>(
+  "Generate a JSON object with {key1} and {key2}",
+  {
+    model: 'gpt-4-2024-05-13',
+    maxTokens: 150,
+    temperature: 0.5,
+    responseFormat: 'json_object'
+  }
+);
+```
+
+### Tool Calling
+
+```typescript
+const toolFlow = createLLMFlow<{ task: string }, string>(
+  "Use available tools to {task}",
+  {
+    model: 'gpt-4-2024-05-13',
+    maxTokens: 200,
+    tools: [{
+      name: "get_weather",
+      description: "Get current weather",
+      parameters: {
+        type: "object",
+        properties: {
+          location: { type: "string" }
+        },
+        required: ["location"]
+      }
+    }],
+    toolChoice: "auto"
+  }
+);
+```
+
+### Streaming
+
+```typescript
+const streamingFlow = createLLMFlow<{ topic: string }, string>(
+  "Generate a story about {topic}",
+  {
+    model: 'gpt-4-2024-05-13',
+    maxTokens: 500,
+    stream: true
+  }
+);
+
+// Usage
+for await (const chunk of streamingFlow.run({ topic: "space exploration" })) {
+  console.log(chunk);
+}
+```
+
+These examples demonstrate how to use LLMFlow's options inline when creating flow instances. Adjust the options as needed for your specific use cases.
+
 ### Other Features
 ### Versioning
 Prompts in LLMFlow are treated as parameters of a machine learning model. The process of prompt engineering involves multiple iterations, similar to hyperparameter tuning in traditional machine learning.
