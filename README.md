@@ -140,7 +140,7 @@ const flow = createLLMFlow<{ topic: string }, string>(
     maxTokens: 100,
     dontParse: true,
   },
-  {} // This empty object enables compile-time type checking
+  {} 
 );
 ```
 
@@ -164,7 +164,7 @@ const flow = createLLMFlow<{ topic: string }, string>(
     responseFormat: 'text',
     stream: false
   },
-  {} // This empty object enables compile-time type checking
+  {} 
 );
 
 // Usage
@@ -196,7 +196,7 @@ const jsonFlow = createLLMFlow<{ key1: string, key2: string }, JsonOutputType>(
     temperature: 0.5,
     responseFormat: 'json_object'
   },
-  {} // This empty object enables compile-time type checking
+  {}
 );
 ```
 
@@ -221,7 +221,7 @@ const toolFlow = createLLMFlow<{ task: string }, string>(
     }],
     toolChoice: "auto"
   },
-  {} // This empty object enables compile-time type checking
+  {}
 );
 ```
 
@@ -235,7 +235,7 @@ const streamingFlow = createLLMFlow<{ topic: string }, string>(
     maxTokens: 500,
     stream: true
   },
-  {} // This empty object enables compile-time type checking
+  {}
 );
 
 // Usage
