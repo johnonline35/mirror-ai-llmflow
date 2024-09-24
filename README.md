@@ -31,13 +31,13 @@ import { createLLMFlow } from 'llm-flow';
 Create an LLMFlow instance:
 ```typescript
 const flow = createLLMFlow(
-  "Hello {name}, you are {age} years old and your balance is ${balance}",
-  {
-    model: "gpt-3.5-turbo-0125",
-    maxTokens: 50,
-    temperature: 0.5,
-  }
-);
+      "Hello {{name}}, you are {{age}} years old and your balance is {{balance}}",
+      {
+        model: "gpt-3.5-turbo-0125",
+        maxTokens: 50,
+        temperature: 0.5,
+      }
+    );
 ```
 
 Use the flow:
