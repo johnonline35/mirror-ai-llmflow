@@ -25,19 +25,19 @@ LLMFlow is built with TypeScript and provides first-class TypeScript support out
 
 Import the necessary functions:
 
-\```typescript
+```typescript
 import { createLLMFlow } from 'llm-flow';
-\```
+```
 
 Create an LLMFlow instance:
 
-\```typescript
+```typescript
 const flow = createLLMFlow<{ topic: string; length: number }, string>(
   "Write a {length}-word paragraph about {topic}",
   { model: 'gpt-4-2024-05-13', maxTokens: 100 },
   {} // This empty object is for type validation
 );
-\```
+```
 
 This example demonstrates several key advantages of LLMFlow's TypeScript integration:
 
@@ -46,10 +46,10 @@ This example demonstrates several key advantages of LLMFlow's TypeScript integra
 
 Run the flow:
 
-\```typescript
+```typescript
 const result = await flow.run({ topic: 'artificial intelligence', length: 50 });
 console.log(result);
-\```
+```
 
 TypeScript ensures that you provide the correct input type (an object with `topic` and `length` properties) and that the `result` is treated as a `string`.
 
