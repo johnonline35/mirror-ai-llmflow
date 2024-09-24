@@ -112,7 +112,7 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
 
 By leveraging LLMFlow's capabilities, you can create complex, type-safe interactions with language models that produce structured data, making it easier to integrate LLM outputs into your applications.
 
-### Turning JSON Auto-Parsing Off
+### Turn JSON Auto-Parsing Off
 
 JSON parsing is turned on by default in LLMFlow. However you easily turn it off if you want to parse the response in a custom way (for example you might be using a custom LLM model that outputs in a specific way.) 
 
