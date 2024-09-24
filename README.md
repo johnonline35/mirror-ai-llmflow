@@ -13,9 +13,9 @@ LLMFlow uses API keys for OpenAI and Anthropic services. These keys should be se
 
 Example:
 
-\```
+```
 OPENAI_API_KEY=your_openai_api_key ANTHROPIC_API_KEY=your_anthropic_api_key
-\```
+```
 
 The service automatically loads these keys from environment variables.
 
