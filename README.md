@@ -71,12 +71,13 @@ const userPrompt = "Generate a 3D model of a house";
 const availableTools = ["Text generation", "Image generation", "Code completion"];
 
 assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
-  .then((assessment) => {
-    console.log(`Is the prompt possible? ${assessment.success}`);
-    console.log(`Feedback: ${assessment.feedback}`);
+  .then((result) => {
+    // The result is already parsed as an object by LlmFlow
+    console.log(`Is the prompt possible? ${result.success}`);
+    console.log(`Feedback: ${result.feedback}`);
   })
   .catch((error) => {
-    console.log('Error in assessment:', error);
+    console.error('Error in assessment:', error);
   });
 ```
 
