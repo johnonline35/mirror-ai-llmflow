@@ -72,8 +72,8 @@ const availableTools = ["Text generation", "Image generation", "Code completion"
 
 assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
   .then((assessment) => {
-    console.log(\`Is the prompt possible? ${assessment.success}\`);
-    console.log(\`Feedback: ${assessment.feedback}\`);
+    console.log(`Is the prompt possible? ${assessment.success}`);
+    console.log(`Feedback: ${assessment.feedback}`);
   })
   .catch((error) => {
     console.log('Error in assessment:', error);
