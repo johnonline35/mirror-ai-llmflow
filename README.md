@@ -8,8 +8,8 @@ npm i @mirror-ai/llmflow
 
 LLMFlow uses API keys for OpenAI and Anthropic services. These keys should be set as environment variables:
 
-* Set \`OPENAI_API_KEY\` for OpenAI services
-* Set \`ANTHROPIC_API_KEY\` for Anthropic services
+* Set `OPENAI_API_KEY` for OpenAI services
+* Set `ANTHROPIC_API_KEY` for Anthropic services
 
 Example:
 
