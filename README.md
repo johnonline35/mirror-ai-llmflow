@@ -114,7 +114,9 @@ By leveraging LLMFlow's capabilities, you can create complex, type-safe interact
 
 ### Turning JSON Auto-Parsing Off
 
-JSON parsing is turned on by default in LLMFlow. However you easily turn it off if you want to parse the response in a custom way (for example you might be using a custom LLM model that outputs in a specific way. Just pass the "dontParse" flag in the options:
+JSON parsing is turned on by default in LLMFlow. However you easily turn it off if you want to parse the response in a custom way (for example you might be using a custom LLM model that outputs in a specific way.) 
+
+Simply pass the "dontParse" flag in the options and LLMFlow will return the raw string from the LLM model of your choice:
 
 ```typescript
 import { createLLMFlow } from '@mirror-ai/llmflow';
