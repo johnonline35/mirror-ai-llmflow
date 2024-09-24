@@ -101,7 +101,8 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
   })
   .catch((error) => {
     console.error('Error in assessment:', error);
-  });\```
+  });
+```
 
 In this example, TypeScript ensures that the input to \`run()\` matches the structure defined in the flow creation. It also knows the exact shape of the \`result\` object, providing type safety throughout your code.
 
