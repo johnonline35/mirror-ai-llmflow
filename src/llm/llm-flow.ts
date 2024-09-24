@@ -16,10 +16,7 @@ interface VersioningOptions {
   storePath: string;
 }
 
-interface PromptVersion<
-  Template extends string,
-  TInput extends Record<string, unknown>
-> {
+interface PromptVersion<Template extends string> {
   id: string;
   timestamp: number;
   template: Template;
@@ -30,18 +27,14 @@ function generateUUID(): string {
   return crypto.randomUUID();
 }
 
-export class LLMFlow<
-  Template extends string,
-  TInput extends Record<string, unknown>,
-  TOutput = string
-> {
+export class LLMFlow<Template extends string, TOutput = string> {
   private llmPromise: Promise<LLM>;
   private parser: ParsingService;
   private versionId: string | null = null;
   private versioningOptions: VersioningOptions;
 
   constructor(
-    private promptTemplate: PromptTemplate<Template, TInput>,
+    private promptTemplate: PromptTemplate<Template>,
     private options: LLMOptions,
     versioningOptions?: Partial<VersioningOptions>
   ) {
@@ -59,7 +52,9 @@ export class LLMFlow<
     }
   }
 
-  async run(input: TInput): Promise<TOutput> {
+  async run<TInput extends Record<string, unknown>>(
+    input: ValidateTemplate<Template, TInput>
+  ): Promise<TOutput> {
     const llm = await this.llmPromise;
     const prompt = formatPrompt(this.promptTemplate, input);
     const response = await llm.execute(prompt, this.options);
@@ -88,7 +83,7 @@ export class LLMFlow<
   private async saveVersion(): Promise<void> {
     if (!this.versionId) return;
 
-    const version: PromptVersion<Template, TInput> = {
+    const version: PromptVersion<Template> = {
       id: this.versionId,
       timestamp: Date.now(),
       template: this.promptTemplate.template,
@@ -104,21 +99,13 @@ export class LLMFlow<
   }
 }
 
-export function createLLMFlow<
-  Template extends string,
-  TInput extends Record<string, unknown> = Record<string, string>,
-  TOutput = string
->(
+export function createLLMFlow<Template extends string, TOutput = string>(
   template: Template,
   options: LLMOptions,
-  input: ValidateTemplate<Template, TInput>,
   versioningOptions?: Partial<VersioningOptions>
-): LLMFlow<Template, TInput, TOutput> {
-  const promptTemplate = createPromptTemplate<Template, TInput>(
-    template,
-    input
-  );
-  return new LLMFlow<Template, TInput, TOutput>(
+): LLMFlow<Template, TOutput> {
+  const promptTemplate = createPromptTemplate(template);
+  return new LLMFlow<Template, TOutput>(
     promptTemplate,
     options,
     versioningOptions

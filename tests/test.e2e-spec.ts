@@ -1,85 +1,137 @@
-import { createLLMFlow, LLMFlow } from "../src/llm/llm-flow";
-import { LLM } from "../src/llm/llm.interface";
-// import * as fs from "fs/promises";
-// import * as path from "path";
+import { LLMFlow, createLLMFlow } from "../src/llm/llm-flow";
+import { LLMOptions } from "../src/llm/llm.interface";
+import * as fs from "fs/promises";
+import { resolveLLM } from "../src/llm/llm-resolver";
 
-jest.mock("./llm-resolver", () => ({
-  resolveLLM: jest.fn(),
-}));
+// Mock dependencies
+jest.mock("fs/promises");
+jest.mock("./llm-resolver");
+jest.mock("./common/utils/parsing.service");
 
-jest.mock("./common/utils/parsing.service", () => ({
-  ParsingService: jest.fn().mockImplementation(() => ({
-    cleanMarkdown: jest.fn((text) => text),
-    extractJsonFromText: jest.fn((text) => text),
-  })),
-}));
+// Example LLM mock implementation
+const mockLLM = {
+  execute: jest
+    .fn()
+    .mockImplementation((prompt: string) =>
+      Promise.resolve(`Processed: ${prompt}`)
+    ),
+};
 
-jest.mock("fs/promises", () => ({
-  mkdir: jest.fn(),
-  writeFile: jest.fn(),
-}));
+// Mocking the LLM resolver to return the mock LLM
+(resolveLLM as jest.Mock).mockResolvedValue(mockLLM);
 
-describe("LLMFlow E2E Integration Test", () => {
-  let mockLLM: jest.Mocked<LLM>;
+// Mocking fs methods to simulate versioning file creation
+const mockMkdir = fs.mkdir as jest.Mock;
+const mockWriteFile = fs.writeFile as jest.Mock;
 
-  beforeEach(() => {
-    mockLLM = {
-      execute: jest.fn(),
-    };
-
-    (require("./llm-resolver").resolveLLM as jest.Mock).mockResolvedValue(
-      mockLLM
-    );
+describe("LLMFlow E2E Integration Tests", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("should create an LLMFlow instance and run it successfully", async () => {
-    // Define the prompt template and input
-    const template = "Hello {name}, welcome to {place}!";
-    const input = { name: "Alice", place: "Wonderland" };
+  it('should execute the LLM flow and format the prompt correctly', async () => {
+  // Use createLLMFlow inline with TypeScript generics and empty object for type validation
+  const llmFlow = createLLMFlow(
+  "Hello {name}, you are {age} years old and your balance is ${balance}",
+  {
+    model: "gpt-3.5-turbo-0125",
+    maxTokens: 50,
+    temperature: 0.5,
+  }
+);
 
-    // Create the LLMFlow instance
-    const llmFlow = createLLMFlow(
-      template,
-      { model: "claude-3.5-sonnet-20240307" },
-      input
-    );
+  const result = await llmFlow.run({ name: "Alice", age: 30, balance: 1000 });
 
-    // Mock the LLM response
-    mockLLM.execute.mockResolvedValue(
-      '{"message": "Hello Alice, welcome to Wonderland!"}'
-    );
+  expect(result).toBe("Processed: Hello John, your balance is 1000");
+  expect(mockLLM.execute).toHaveBeenCalledWith("Hello John, your balance is 1000", {
+    model: "gpt-3.5-turbo-0125",
+    maxTokens: 50,
+    temperature: 0.5,
+  });
+});
 
-    // Run the LLMFlow
-    const result = await llmFlow.run(input);
-
-    // Assertions
-    expect(mockLLM.execute).toHaveBeenCalledWith(
-      "Hello Alice, welcome to Wonderland!",
-      { model: "test-model" }
-    );
-    expect(result).toEqual({ message: "Hello Alice, welcome to Wonderland!" });
   });
 
-  it("should handle non-JSON responses", async () => {
-    const template = "Greet {name}";
-    const input = { name: "Bob" };
-
-    const llmFlow = createLLMFlow(
-      template,
-      { model: "claude-3-haiku-20240307", dontParse: true },
-      input
+  it("should save version when versioning is enabled", async () => {
+    // Use createLLMFlow with TypeScript generics, empty object, and versioning enabled
+    const llmFlow = createLLMFlow<{ name: string; balance: string }, string>(
+      "Hello {name}, your balance is {balance}", // Template inline
+      {
+        model: "gpt-3.5-turbo-0125", // Options inline
+        maxTokens: 50,
+        temperature: 0.5,
+      },
+      {}, // Empty object for type validation
+      {
+        versioningEnabled: true, // Versioning options inline
+        storePath: "./mock-versions",
+      }
     );
 
-    mockLLM.execute.mockResolvedValue("Hello, Bob!");
+    await llmFlow.run({ name: "John", balance: "1000" });
 
-    const result = await llmFlow.run(input);
-
-    expect(mockLLM.execute).toHaveBeenCalledWith("Greet Bob", {
-      model: "test-model",
-      dontParse: true,
+    expect(mockMkdir).toHaveBeenCalledWith("./mock-versions", {
+      recursive: true,
     });
-    expect(result).toBe("Hello, Bob!");
+    expect(mockWriteFile).toHaveBeenCalledTimes(1);
+
+    const versionFileContent = JSON.parse(mockWriteFile.mock.calls[0][1]);
+    expect(versionFileContent).toEqual(
+      expect.objectContaining({
+        template: "Hello {name}, your balance is {balance}",
+        options: {
+          model: "gpt-3.5-turbo-0125",
+          maxTokens: 50,
+          temperature: 0.5,
+        },
+      })
+    );
   });
 
-  // Add more test cases as needed
+  it("should handle the LLM response when dontParse is set to true", async () => {
+    // Use createLLMFlow with dontParse option, TypeScript generics, and empty object
+    const llmFlow = createLLMFlow<{ name: string; balance: string }, string>(
+      "Hello {name}, your balance is {balance}", // Template inline
+      {
+        model: "gpt-3.5-turbo-0125", // Options inline
+        maxTokens: 50,
+        temperature: 0.5,
+        dontParse: true, // dontParse inline
+      },
+      {} // Empty object for type validation
+    );
+
+    const result = await llmFlow.run({ name: "John", balance: "1000" });
+
+    expect(result).toBe("Processed: Hello John, your balance is 1000");
+    expect(mockLLM.execute).toHaveBeenCalledWith(
+      "Hello John, your balance is 1000",
+      {
+        model: "gpt-3.5-turbo-0125",
+        maxTokens: 50,
+        temperature: 0.5,
+        dontParse: true,
+      }
+    );
+  });
+
+  it("should handle invalid JSON in the LLM response and return cleaned text", async () => {
+    // Mock invalid JSON response
+    mockLLM.execute.mockResolvedValueOnce("Invalid JSON response");
+
+    // Use createLLMFlow with TypeScript generics and empty object
+    const llmFlow = createLLMFlow<{ name: string; balance: string }, string>(
+      "Hello {name}, your balance is {balance}", // Template inline
+      {
+        model: "gpt-3.5-turbo-0125", // Options inline
+        maxTokens: 50,
+        temperature: 0.5,
+      },
+      {} // Empty object for type validation
+    );
+
+    const result = await llmFlow.run({ name: "John", balance: "1000" });
+
+    expect(result).toBe("Invalid JSON response");
+  });
 });
