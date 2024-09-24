@@ -60,7 +60,7 @@ LLMFlow can handle complex scenarios where structured output is required. This e
 
 ### Creating a Complex Flow
 
-\```typescript
+```typescript
 import { createLLMFlow } from 'llm-flow';
 
 const assessmentFlow = createLLMFlow
@@ -78,7 +78,7 @@ const assessmentFlow = createLLMFlow
   },
   {} // This empty object enables compile-time type checking
 );
-\```
+```
 
 This creates a flow that:
 - Takes a user prompt and a list of available tools as input
@@ -89,7 +89,7 @@ The empty object at the end allows TypeScript to verify that the template variab
 
 ### Running the Flow
 
-\```typescript
+```typescript
 const userPrompt = "Generate a 3D model of a house";
 const availableTools = ["Text generation", "Image generation", "Code completion"];
 
@@ -101,8 +101,7 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
   })
   .catch((error) => {
     console.error('Error in assessment:', error);
-  });
-\```
+  });\```
 
 In this example, TypeScript ensures that the input to \`run()\` matches the structure defined in the flow creation. It also knows the exact shape of the \`result\` object, providing type safety throughout your code.
 
