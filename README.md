@@ -65,8 +65,6 @@ This example demonstrates several key advantages of LLMFlow's TypeScript integra
 
 4. **Flexibility**: You can change the template string, and TypeScript will automatically infer the new required properties without any additional type annotations.
 
-5. **No Empty Object Needed**: Unlike the previous version, you don't need to provide an empty object for type inference. The types are inferred directly from the template string.
-
 This approach provides strong type checking and a great developer experience, catching potential errors at compile-time and providing clear feedback about what's wrong when there's a mismatch between the template and the provided input.
 ## Advanced Usage: JSON Output and Complex Flows
 
