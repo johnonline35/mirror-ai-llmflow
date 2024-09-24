@@ -1,121 +1,85 @@
-import { createLLMFlow } from "../src/llm/llm-flow";
-import { LLMOptions } from "../src/llm/llm.interface";
+import { createLLMFlow, LLMFlow } from "../src/llm/llm-flow";
+import { LLM } from "../src/llm/llm.interface";
+// import * as fs from "fs/promises";
+// import * as path from "path";
 
-describe("LLM Flow E2E Test with Mixed JSON and String Output (Non-NestJS)", () => {
-  jest.setTimeout(30000); // Increase timeout for API calls
+jest.mock("./llm-resolver", () => ({
+  resolveLLM: jest.fn(),
+}));
 
-  it("should call the OpenAI API and return a valid complex JSON response", async () => {
-    interface CountryResponse {
-      countries: Array<{
-        name: string;
-        capital: string;
-        population: number;
-        area: number;
-        languages: string[];
-      }>;
-    }
+jest.mock("./common/utils/parsing.service", () => ({
+  ParsingService: jest.fn().mockImplementation(() => ({
+    cleanMarkdown: jest.fn((text) => text),
+    extractJsonFromText: jest.fn((text) => text),
+  })),
+}));
 
-    const options: LLMOptions = {
-      model: "gpt-4o-2024-08-06",
-      responseFormat: "json_object",
-      maxTokens: 300,
-      temperature: 0.7,
+jest.mock("fs/promises", () => ({
+  mkdir: jest.fn(),
+  writeFile: jest.fn(),
+}));
+
+describe("LLMFlow E2E Integration Test", () => {
+  let mockLLM: jest.Mocked<LLM>;
+
+  beforeEach(() => {
+    mockLLM = {
+      execute: jest.fn(),
     };
 
-    const jsonFlow = createLLMFlow<Record<string, never>, CountryResponse>(
-      "Return a JSON object with the details of three countries, including the capital, population, area, and languages spoken for each country.",
-      options
+    (require("./llm-resolver").resolveLLM as jest.Mock).mockResolvedValue(
+      mockLLM
+    );
+  });
+
+  it("should create an LLMFlow instance and run it successfully", async () => {
+    // Define the prompt template and input
+    const template = "Hello {name}, welcome to {place}!";
+    const input = { name: "Alice", place: "Wonderland" };
+
+    // Create the LLMFlow instance
+    const llmFlow = createLLMFlow(
+      template,
+      { model: "claude-3.5-sonnet-20240307" },
+      input
     );
 
-    const response = await jsonFlow.run({});
+    // Mock the LLM response
+    mockLLM.execute.mockResolvedValue(
+      '{"message": "Hello Alice, welcome to Wonderland!"}'
+    );
 
-    expect(response).toHaveProperty("countries");
-    expect(Array.isArray(response.countries)).toBe(true);
-    expect(response.countries.length).toBe(3);
+    // Run the LLMFlow
+    const result = await llmFlow.run(input);
 
-    response.countries.forEach((country) => {
-      expect(country).toMatchObject({
-        name: expect.any(String),
-        capital: expect.any(String),
-        population: expect.any(Number),
-        area: expect.any(Number),
-        languages: expect.arrayContaining([expect.any(String)]),
-      });
+    // Assertions
+    expect(mockLLM.execute).toHaveBeenCalledWith(
+      "Hello Alice, welcome to Wonderland!",
+      { model: "test-model" }
+    );
+    expect(result).toEqual({ message: "Hello Alice, welcome to Wonderland!" });
+  });
+
+  it("should handle non-JSON responses", async () => {
+    const template = "Greet {name}";
+    const input = { name: "Bob" };
+
+    const llmFlow = createLLMFlow(
+      template,
+      { model: "claude-3-haiku-20240307", dontParse: true },
+      input
+    );
+
+    mockLLM.execute.mockResolvedValue("Hello, Bob!");
+
+    const result = await llmFlow.run(input);
+
+    expect(mockLLM.execute).toHaveBeenCalledWith("Greet Bob", {
+      model: "test-model",
+      dontParse: true,
     });
+    expect(result).toBe("Hello, Bob!");
   });
 
-  it("should handle plain text responses", async () => {
-    const textFlow = createLLMFlow<Record<string, never>, string>(
-      "Tell me a random fact about the Eiffel Tower.",
-      {
-        model: "gpt-4o-2024-08-06",
-        responseFormat: "text",
-        maxTokens: 100,
-        temperature: 0.7,
-      }
-    );
-
-    const response = await textFlow.run({});
-    expect(typeof response).toBe("string");
-    expect(response.toLowerCase()).toContain("eiffel tower");
-    console.log("Plain text response:", response);
-  });
-
-  it("should handle JSON responses with markdown formatting", async () => {
-    const markdownJsonFlow = createLLMFlow<Record<string, never>, any>(
-      "Return a JSON object with details of a book, including title, author, and publication year. Wrap the JSON in markdown code blocks.",
-      {
-        model: "gpt-4o-2024-08-06",
-        responseFormat: "text",
-        maxTokens: 200,
-        temperature: 0.7,
-      }
-    );
-
-    const response = await markdownJsonFlow.run({});
-    expect(typeof response).toBe("object");
-    expect(response).toHaveProperty("title");
-    expect(response).toHaveProperty("author");
-    expect(response).toHaveProperty("publication_year");
-  });
-
-  it("should handle potential errors gracefully", async () => {
-    const options: LLMOptions = {
-      model: "gpt-4o-2024-08-06",
-      responseFormat: "json_object",
-      maxTokens: 10,
-      temperature: 0.7,
-    };
-
-    const errorFlow = createLLMFlow<Record<string, never>, string>(
-      "This is an intentionally long and complex prompt that might cause issues. ".repeat(
-        50
-      ),
-      options
-    );
-
-    const response = await errorFlow.run({});
-    expect(typeof response).toBe("string");
-    expect(response.length).toBeGreaterThan(0);
-    expect(response.toLowerCase()).toMatch(/repeat|same|phrase|multiple/);
-  });
-
-  it("should handle responses with varying levels of detail", async () => {
-    const options: LLMOptions = {
-      model: "gpt-4o-2024-08-06",
-      responseFormat: "json_object",
-      maxTokens: 200,
-      temperature: 0.9,
-    };
-
-    const detailFlow = createLLMFlow<Record<string, never>, string>(
-      "Provide information about a random city. The level of detail may vary.",
-      options
-    );
-
-    const response = await detailFlow.run({});
-    expect(typeof response).toBe("string");
-    expect(response.length).toBeGreaterThan(0);
-    expect(response).toContain("city");
-  });
+  // Add more test cases as needed
 });

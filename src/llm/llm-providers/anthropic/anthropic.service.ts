@@ -63,7 +63,6 @@ export class AnthropicService implements LLM {
         if (block.type === "text") {
           content += block.text;
         }
-        // Handle other content types if necessary
       }
 
       this.logger.logTokenUsage(

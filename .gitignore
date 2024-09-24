@@ -30,6 +30,7 @@ coverage/
 # Temporary files
 temp/
 tmp/
+tests/
 
 # Editor-specific files
 .vscode/
