@@ -63,9 +63,7 @@ const assessmentFlow = createLLMFlow(
   `Assess whether the user prompt "{prompt}" is possible given the following tools: {tools}.
    Your response should include a valid JSON object with two keys:
    "success": boolean (true if the prompt is possible, false otherwise)
-   "feedback": string (explanation of your assessment)
-   
-   Respond only with the JSON object, no additional text.`,
+   "feedback": string (explanation of your assessment)`,
   {
     model: 'gpt-4-2024-05-13',
     maxTokens: 150,
@@ -113,6 +111,23 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
 - The actual output depends on the LLM's interpretation of the prompt. You may need to iterate on the prompt template to get consistently well-structured responses.
 
 By leveraging LLMFlow's capabilities, you can create complex, type-safe interactions with language models that produce structured data, making it easier to integrate LLM outputs into your applications.
+
+### Turning JSON Auto-Parsing Off
+
+JSON parsing is turned on by default in LLMFlow. However you easily turn it off if you want to parse the response in a custom way (for example you might be using a custom LLM model that outputs in a specific way. Just pass the "dontParse" flag in the options:
+
+```typescript
+import { createLLMFlow } from '@mirror-ai/llmflow';
+
+const flow = createLLMFlow<{ topic: string }, string>(
+  "Write a short paragraph about {topic}",
+  {
+    model: 'gpt-4-2024-05-13',
+    maxTokens: 100,
+    dontParse: true,
+  }
+);
+```
 
 ## Using LLMOptions Inline
 
