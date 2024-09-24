@@ -24,36 +24,50 @@ LLMFlow is built with TypeScript and provides first-class TypeScript support out
 ## Basic Usage
 
 Import the necessary functions:
-
 ```typescript
 import { createLLMFlow } from 'llm-flow';
 ```
 
 Create an LLMFlow instance:
-
 ```typescript
-const flow = createLLMFlow<{ topic: string; length: number }, string>(
-  "Write a {length}-word paragraph about {topic}",
-  { model: 'gpt-4-2024-05-13', maxTokens: 100 },
-  {} // This empty object is for type validation
+const flow = createLLMFlow(
+  "Hello {name}, you are {age} years old and your balance is ${balance}",
+  {
+    model: "gpt-3.5-turbo-0125",
+    maxTokens: 50,
+    temperature: 0.5,
+  }
 );
+```
+
+Use the flow:
+```typescript
+// This will work fine:
+flow.run({ name: "Alice", age: 30, balance: 1000 });
+
+// This will cause a TypeScript error (missing 'balance'):
+flow.run({ name: "Bob", age: 25 });
+
+// This will cause a TypeScript error (missing 'age'):
+flow.run({ name: "Charlie", balance: 1500 });
+
+// This will cause a TypeScript error (extra property 'extra'):
+flow.run({ name: "David", age: 35, balance: 2000, extra: true });
 ```
 
 This example demonstrates several key advantages of LLMFlow's TypeScript integration:
 
-1. **Type Safety**: TypeScript generics define the input type as an object with `topic` (string) and `length` (number) properties, and the output type as a string.
-2. **Compile-Time Checking**: The empty object (`{}`) allows TypeScript to verify that the variables in your template string match the input type you've specified.
+1. **Type Safety**: TypeScript infers the input type from the template string. In this case, it infers an object with `name` (string), `age` (number or string), and `balance` (number or string) properties.
 
-Run the flow:
+2. **Compile-Time Checking**: TypeScript checks that the input object you provide to `run()` matches the structure defined by the template string.
 
-```typescript
-const result = await flow.run({ topic: 'artificial intelligence', length: 50 });
-console.log(result);
-```
+3. **Informative Error Messages**: If you miss a required property or add an extra one, TypeScript will provide a clear error message indicating what's wrong.
 
-TypeScript ensures that you provide the correct input type (an object with `topic` and `length` properties) and that the `result` is treated as a `string`.
+4. **Flexibility**: You can change the template string, and TypeScript will automatically infer the new required properties without any additional type annotations.
 
-This structure provides a robust, type-safe way to define and use prompt templates, reducing errors and improving developer experience. The empty object pattern, while it might seem unusual at first, offers powerful type checking with zero runtime overhead.
+5. **No Empty Object Needed**: Unlike the previous version, you don't need to provide an empty object for type inference. The types are inferred directly from the template string.
+
+This approach provides strong type checking and a great developer experience, catching potential errors at compile-time and providing clear feedback about what's wrong when there's a mismatch between the template and the provided input.
 ## Advanced Usage: JSON Output and Complex Flows
 
 LLMFlow can handle complex scenarios where structured output is required. This example demonstrates how to create a flow that assesses whether a user's prompt is possible given a set of available tools, returning a JSON object with a boolean \`success\` flag and a \`feedback\` string.
@@ -73,7 +87,6 @@ const assessmentFlow = createLLMFlow<{ prompt: string; tools: string }, { succes
     maxTokens: 150,
     temperature: 0.2
   },
-  {} // This empty object enables compile-time type checking
 );
 
 ```
