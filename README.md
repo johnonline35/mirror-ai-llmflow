@@ -99,8 +99,6 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
 
 By leveraging LLMFlow's capabilities, you can create complex, type-safe interactions with language models that produce structured data, making it easier to integrate LLM outputs into your applications.
 
-# LLMFlow Quickstart Guide - Inline Options
-
 ## Using LLMOptions Inline
 
 LLMFlow allows you to specify options directly when creating a flow. Here's how to use some of the key options inline:
