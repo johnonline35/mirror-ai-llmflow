@@ -4,7 +4,7 @@ LLMFlow is a powerful and flexible TypeScript-first library for working with Lan
 ```bash
 npm i @mirror-ai/llmflow
 ```
-## API Key Configuration
+### API Key Configuration
 
 LLMFlow uses API keys for OpenAI and Anthropic services. These keys should be set as environment variables:
 
