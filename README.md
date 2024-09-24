@@ -66,16 +66,17 @@ This example demonstrates several key advantages of LLMFlow's TypeScript integra
 4. **Flexibility**: You can change the template string, and TypeScript will automatically infer the new required properties without any additional type annotations.
 
 This approach provides strong type checking and a great developer experience, catching potential errors at compile-time and providing clear feedback about what's wrong when there's a mismatch between the template and the provided input.
-## Advanced Usage: JSON Output and Complex Flows
 
-LLMFlow can handle complex scenarios where structured output is required. This example demonstrates how to create a flow that assesses whether a user's prompt is possible given a set of available tools, returning a JSON object with a boolean \`success\` flag and a \`feedback\` string.
+# Advanced Usage: JSON Output and Complex Flows
 
-### Creating a Complex Flow
+LLMFlow can handle complex scenarios where structured output is required. This example demonstrates how to create a flow that assesses whether a user's prompt is possible given a set of available tools, returning a JSON object with a boolean `success` flag and a `feedback` string.
+
+## Creating a Complex Flow
 
 ```typescript
 import { createLLMFlow } from 'llm-flow';
 
-const assessmentFlow = createLLMFlow<{ prompt: string; tools: string }, { success: boolean; feedback: string }>(
+const assessmentFlow = createLLMFlow(
   `Assess whether the user prompt "{prompt}" is possible given the following tools: {tools}.
    Your response should include a valid JSON object with two keys:
    "success": boolean (true if the prompt is possible, false otherwise)
@@ -84,19 +85,18 @@ const assessmentFlow = createLLMFlow<{ prompt: string; tools: string }, { succes
     model: 'gpt-4-2024-05-13',
     maxTokens: 150,
     temperature: 0.2
-  },
+  }
 );
-
 ```
 
 This creates a flow that:
-- Takes a user prompt and a list of available tools as input
-- Instructs the LLM to assess the feasibility of the prompt
-- Returns a JSON object with \`success\` and \`feedback\` fields
+* Takes a user prompt and a list of available tools as input
+* Instructs the LLM to assess the feasibility of the prompt
+* Returns a JSON object with `success` and `feedback` fields
 
-The empty object at the end allows TypeScript to verify that the template variables match the input type, providing compile-time safety.
+TypeScript automatically infers the input type from the template string, ensuring type safety at compile-time.
 
-### Running the Flow
+## Running the Flow
 
 ```typescript
 const userPrompt = "Generate a 3D model of a house";
@@ -104,7 +104,7 @@ const availableTools = ["Text generation", "Image generation", "Code completion"
 
 assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
   .then((result) => {
-    // TypeScript knows that result is of type { success: boolean; feedback: string }
+    // TypeScript infers that result is of type { success: boolean; feedback: string }
     console.log(`Is the prompt possible? ${result.success}`);
     console.log(`Feedback: ${result.feedback}`);
   })
@@ -113,23 +113,35 @@ assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
   });
 ```
 
-In this example, TypeScript ensures that the input to \`run()\` matches the structure defined in the flow creation. It also knows the exact shape of the \`result\` object, providing type safety throughout your code.
+In this example, TypeScript ensures that the input to `run()` matches the structure defined in the template string. It also infers the shape of the `result` object based on the expected JSON structure described in the prompt.
 
 ## Key Features
 
-1. Type Inference: LLMFlow automatically infers input and output types based on the prompt template and expected JSON structure.
+1. **Automatic Type Inference**: LLMFlow automatically infers input types based on the prompt template. Output types are inferred based on the expected JSON structure described in the prompt.
 
-2. Structured Output: The flow is designed to return a specific JSON structure, which is automatically parsed by the library.
+2. **Structured Output**: The flow is designed to return a specific JSON structure, which is automatically parsed by the library.
 
-3. Flexible Input: The flow accepts multiple input parameters (\`prompt\` and \`tools\`) which are inserted into the prompt template.
+3. **Flexible Input**: The flow accepts multiple input parameters (`prompt` and `tools`) which are inserted into the prompt template.
 
-4. Error Handling: The example includes basic error handling to catch any issues during flow execution.
+4. **Error Handling**: The example includes basic error handling to catch any issues during flow execution.
 
-### Notes
+5. **Compile-Time Checking**: TypeScript checks that the input object provided to `run()` matches the structure defined by the template string.
 
-- The library parses the LLM's response as JSON automatically. If parsing fails, it will return the raw string response.
-- Adjust the \`maxTokens\` and \`temperature\` settings as needed for your specific use case.
-- The actual output depends on the LLM's interpretation of the prompt. You may need to iterate on the prompt template to get consistently well-structured responses.
+## Notes
+
+* The library attempts to parse the LLM's response as JSON automatically. If parsing fails, it will return the raw string response.
+* Adjust the `maxTokens` and `temperature` settings as needed for your specific use case.
+* The actual output depends on the LLM's interpretation of the prompt. You may need to iterate on the prompt template to get consistently well-structured responses.
+* If you need to specify the output type explicitly (e.g., for more complex structures), you can do so when creating the flow:
+
+  ```typescript
+  const assessmentFlow = createLLMFlow<string>(
+    // ... prompt template ...
+    // ... options ...
+  );
+  ```
+
+  This tells TypeScript to treat the output as a string, which you can then parse manually if needed.
 
 By leveraging LLMFlow's capabilities, you can create complex, type-safe interactions with language models that produce structured data, making it easier to integrate LLM outputs into your applications.
 
