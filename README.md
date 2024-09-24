@@ -25,41 +25,48 @@ LLMFlow is built with TypeScript and provides first-class TypeScript support out
 
 Import the necessary functions:
 
-```typescript
+\```typescript
 import { createLLMFlow } from 'llm-flow';
-```
+\```
 
 Create an LLMFlow instance:
 
-```typescript
+\```typescript
 const flow = createLLMFlow<{ topic: string; length: number }, string>(
   "Write a {length}-word paragraph about {topic}",
-  { model: 'gpt-4-2024-05-13', maxTokens: 100 }
+  { model: 'gpt-4-2024-05-13', maxTokens: 100 },
+  {} // This empty object is for type validation
 );
-```
+\```
+
 This example demonstrates several key advantages of LLMFlow's TypeScript integration:
 
-Type Safety: TypeScript generics define the input type as an object with `topic` (string) and `length` (number) properties, and the output type as a string.
+1. **Type Safety**: TypeScript generics define the input type as an object with `topic` (string) and `length` (number) properties, and the output type as a string.
+2. **Compile-Time Checking**: The empty object (`{}`) allows TypeScript to verify that the variables in your template string match the input type you've specified.
 
 Run the flow:
 
-```typescript
+\```typescript
 const result = await flow.run({ topic: 'artificial intelligence', length: 50 });
 console.log(result);
-```
-TypeScript ensures that you provide the correct input type (an object with `topic` and `length` properties) and that the `result` is treated as a `string`.
-This structure provides a robust, type-safe way to define and use prompt templates, reducing errors and improving developer experience.
+\```
 
+TypeScript ensures that you provide the correct input type (an object with `topic` and `length` properties) and that the `result` is treated as a `string`.
+
+This structure provides a robust, type-safe way to define and use prompt templates, reducing errors and improving developer experience. The empty object pattern, while it might seem unusual at first, offers powerful type checking with zero runtime overhead.
 ## Advanced Usage: JSON Output and Complex Flows
 
 LLMFlow can handle complex scenarios where structured output is required. This example demonstrates how to create a flow that assesses whether a user's prompt is possible given a set of available tools, returning a JSON object with a boolean \`success\` flag and a \`feedback\` string.
 
 ### Creating a Complex Flow
 
-```typescript
+\```typescript
 import { createLLMFlow } from 'llm-flow';
 
-const assessmentFlow = createLLMFlow(
+const assessmentFlow = createLLMFlow
+  { prompt: string; tools: string },
+  { success: boolean; feedback: string }
+>(
   `Assess whether the user prompt "{prompt}" is possible given the following tools: {tools}.
    Your response should include a valid JSON object with two keys:
    "success": boolean (true if the prompt is possible, false otherwise)
@@ -68,31 +75,36 @@ const assessmentFlow = createLLMFlow(
     model: 'gpt-4-2024-05-13',
     maxTokens: 150,
     temperature: 0.2
-  }
+  },
+  {} // This empty object enables compile-time type checking
 );
-```
+\```
 
 This creates a flow that:
 - Takes a user prompt and a list of available tools as input
 - Instructs the LLM to assess the feasibility of the prompt
 - Returns a JSON object with \`success\` and \`feedback\` fields
 
+The empty object at the end allows TypeScript to verify that the template variables match the input type, providing compile-time safety.
+
 ### Running the Flow
 
-```typescript
+\```typescript
 const userPrompt = "Generate a 3D model of a house";
 const availableTools = ["Text generation", "Image generation", "Code completion"];
 
 assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
   .then((result) => {
-    // The result is already parsed as an object by LlmFlow
+    // TypeScript knows that result is of type { success: boolean; feedback: string }
     console.log(`Is the prompt possible? ${result.success}`);
     console.log(`Feedback: ${result.feedback}`);
   })
   .catch((error) => {
     console.error('Error in assessment:', error);
   });
-```
+\```
+
+In this example, TypeScript ensures that the input to \`run()\` matches the structure defined in the flow creation. It also knows the exact shape of the \`result\` object, providing type safety throughout your code.
 
 ## Key Features
 
@@ -127,7 +139,8 @@ const flow = createLLMFlow<{ topic: string }, string>(
     model: 'gpt-4-2024-05-13',
     maxTokens: 100,
     dontParse: true,
-  }
+  },
+  {} // This empty object enables compile-time type checking
 );
 ```
 
@@ -150,7 +163,8 @@ const flow = createLLMFlow<{ topic: string }, string>(
     stopSequences: ['\n', 'END'],
     responseFormat: 'text',
     stream: false
-  }
+  },
+  {} // This empty object enables compile-time type checking
 );
 
 // Usage
@@ -181,7 +195,8 @@ const jsonFlow = createLLMFlow<{ key1: string, key2: string }, JsonOutputType>(
     maxTokens: 150,
     temperature: 0.5,
     responseFormat: 'json_object'
-  }
+  },
+  {} // This empty object enables compile-time type checking
 );
 ```
 
@@ -205,7 +220,8 @@ const toolFlow = createLLMFlow<{ task: string }, string>(
       }
     }],
     toolChoice: "auto"
-  }
+  },
+  {} // This empty object enables compile-time type checking
 );
 ```
 
@@ -218,7 +234,8 @@ const streamingFlow = createLLMFlow<{ topic: string }, string>(
     model: 'gpt-4-2024-05-13',
     maxTokens: 500,
     stream: true
-  }
+  },
+  {} // This empty object enables compile-time type checking
 );
 
 // Usage
@@ -238,6 +255,7 @@ Enable versioning to keep track of your prompt templates and LLM configurations:
 const flowWithVersioning = createLLMFlow<{ topic: string; length: number }, string>(
   "Write a {length}-word paragraph about {topic}",
   { model: 'gpt-4-2024-05-13', maxTokens: 100 },
+{}, // Type validation object
 { versioningEnabled: true, storePath: './prompt-checkpoints' }
 );
 ```
@@ -279,7 +297,8 @@ LLMFlow leverages TypeScript's generic types to ensure type safety when defining
 ```typescript
 const flow = createLLMFlow<{ name: string; age: number }, UserProfile>(
 "Generate a user profile for {name}, age {age}",
-{ model: 'gpt-4o-2024-05-13' }
+{ model: 'gpt-4o-2024-05-13' },
+{} // Type validation object
 );
 ```
 TypeScript ensures that:
@@ -312,20 +331,16 @@ interface VersioningOptions {
 versioningEnabled: boolean;
 storePath: string;
 }
-const flow = createLLMFlow<InputType, OutputType>(
-template,
-llmOptions,
-versioningOptions
-);
-```
-### 6. Type Inference
-TypeScript's type inference works seamlessly with LLMFlow:
-```typescript
-const flow = createLLMFlow(
-"Summarize this text: {text}",
-{ model: 'gpt-4o-2024-05-13' }
-);
-// TypeScript infers: LLMFlow<{ text: string }, string>
+const flow = createLLMFlow<
+  Template extends string,
+  TInput extends Record<string, unknown> = Record<string, string>,
+  TOutput = string
+>(
+  template: Template,
+  options: LLMOptions,
+  input: ValidateTemplate<Template, TInput>,
+  versioningOptions?: Partial<VersioningOptions>
+)
 ```
 
 ## Best Practices
