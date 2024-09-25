@@ -111,7 +111,7 @@ TypeScript automatically infers the input type from the template string, ensurin
 const userPrompt = "Generate a 3D model of a house";
 const availableTools = ["Text generation", "Image generation", "Code completion"];
 
-assessmentFlow.run({ prompt: userPrompt, tools: availableTools.join(', ') })
+assessmentFlow.run({ prompt: userPrompt, tools: availableTools })
   .then((result) => {
     // TypeScript infers that result is of type { success: boolean; feedback: string }
     console.log(`Is the prompt possible? ${result.success}`);
