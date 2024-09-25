@@ -45,14 +45,22 @@ Use the flow:
 // This will work fine:
 flow.run({ name: "Alice", age: 30, balance: 1000 });
 
-// This will cause a TypeScript error (missing 'balance'):
-flow.run({ name: "Bob", age: 25 });
-
 // This will cause a TypeScript error (Type 'string' is not assignable to type 'number'.):
 flow.run({ name: "Charlie", age: "bob", balance: 1500 });
 
 // This will cause a TypeScript error (extra property 'extra'):
 flow.run({ name: "David", age: 35, balance: 2000, extra: true });
+```
+
+The prompt template is also parsed, so not providing a value for age will result in a TypeScript error, as the age property is expected but missing.
+
+```typescript
+"Hello {{name}}, you are age years old and your balance is {{balance}}"
+```
+Will create this error:
+
+```typescript
+// This will cause a TypeScript error (Property 'age' is missing):
 ```
 Because LLM's usually return a string, this is the default return type and you do not need to explcitly type it.
 
