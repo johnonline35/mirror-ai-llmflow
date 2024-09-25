@@ -40,7 +40,11 @@ describe("LLMFlow E2E Integration Tests", () => {
       }
     );
 
-    const result = await llmFlow.run({ name: "Alice", age: 30, balance: 1000 });
+    const result = await llmFlow.run({
+      name: "Alice",
+      age: 20,
+      balance: "1000",
+    });
 
     expect(result).toBe("Processed: Hello John, your balance is 1000");
     expect(mockLLM.execute).toHaveBeenCalledWith(

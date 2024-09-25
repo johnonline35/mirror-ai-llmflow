@@ -3,8 +3,11 @@ type ExtractVariables<T extends string> =
     ? Var | ExtractVariables<Rest>
     : never;
 
-export type PromptTemplateType<T extends string> = {
-  [K in ExtractVariables<T>]: any;
+export type PromptTemplateType<
+  T extends string,
+  V = string | number | boolean
+> = {
+  [K in ExtractVariables<T>]: V;
 };
 
 export type PromptTemplate<T extends string> = {
