@@ -57,7 +57,7 @@ flow.run({ name: "David", age: 35, balance: 2000, extra: true });
 
 This example demonstrates several key advantages of LLMFlow's TypeScript integration:
 
-1. **Type Safety**: TypeScript infers the input type from the template string. In this case, it infers an object with `name` (string), `age` (number or string), and `balance` (number or string) properties.
+1. **Type Safety**: TypeScript infers the input type from the template string. In this case, it infers an object with `name`, `age`, and `balance` properties.
 
 2. **Compile-Time Checking**: TypeScript checks that the input object you provide to `run()` matches the structure defined by the template string.
 
