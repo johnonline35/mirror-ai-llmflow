@@ -60,7 +60,7 @@ The prompt template is also parsed, so not providing a value for age will result
 Will create this error:
 
 ```typescript
-// This will cause a TypeScript error (Property 'age' is missing):
+// TypeScript error (Property 'age' is missing):
 ```
 Because LLM's usually return a string, this is the default return type and you do not need to explcitly type it.
 
