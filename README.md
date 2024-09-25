@@ -54,8 +54,9 @@ flow.run({ name: "Charlie", age: "bob", balance: 1500 });
 // This will cause a TypeScript error (extra property 'extra'):
 flow.run({ name: "David", age: 35, balance: 2000, extra: true });
 ```
+Because LLM's usually return a string, this is the default return type and you do not need to explcitly type it.
 
-This example demonstrates several key advantages of LLMFlow's TypeScript integration:
+The above example demonstrates several key advantages of LLMFlow's TypeScript integration:
 
 1. **Type Safety**: The input type is explicitly defined as a generic type parameter in the createLLMFlow function. 
 
