@@ -59,11 +59,11 @@ This example demonstrates several key advantages of LLMFlow's TypeScript integra
 
 1. **Type Safety**: The input type is explicitly defined as a generic type parameter in the createLLMFlow function. 
 
-2. **Compile-Time Checking**: TypeScript checks that the input object you provide to `run()` matches the structure defined by the template string.
+2. **Compile-Time Checking**: TypeScript checks that the input object you provide matches the structure defined in the generic type parameter, not the template string.
 
 3. **Informative Error Messages**: If you miss a required property or add an extra one, TypeScript will provide a clear error message indicating what's wrong.
 
-4. **Flexibility**: You can change the template string, and TypeScript will automatically infer the new required properties without any additional type annotations.
+4. **Flexibility**: The type of the input object is clearly defined, making it easy to understand what properties are required and is easily changed.
 
 This approach provides strong type checking and a great developer experience, catching potential errors at compile-time and providing clear feedback about what's wrong when there's a mismatch between the template and the provided input.
 
