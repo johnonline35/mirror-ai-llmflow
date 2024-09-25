@@ -30,7 +30,7 @@ import { createLLMFlow } from 'llm-flow';
 
 Create an LLMFlow instance:
 ```typescript
-const llmFlow = createLLMFlow<{name: string; age: number; balance: number;}>(
+const flow = createLLMFlow<{name: string; age: number; balance: number;}>(
       "Hello {{name}}, you are {{age}} years old and your balance is {{balance}}",
       {
         model: "gpt-3.5-turbo-0125",
