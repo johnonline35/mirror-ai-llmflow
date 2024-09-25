@@ -1,58 +1,32 @@
 type ExtractVariables<T extends string> =
-  T extends `${string}{${infer Var}}${infer Rest}`
+  T extends `${string}{{${infer Var}}}${infer Rest}`
     ? Var | ExtractVariables<Rest>
     : never;
 
-type ErrorMessage<T extends string> = `Missing required properties: ${T}`;
-
-export type ValidateTemplate<
-  Template extends string,
-  Input extends Record<string, unknown>
-> = ExtractVariables<Template> extends keyof Input
-  ? keyof Input extends ExtractVariables<Template>
-    ? Input
-    : ErrorMessage<Exclude<ExtractVariables<Template>, keyof Input> & string>
-  : ErrorMessage<Exclude<ExtractVariables<Template>, keyof Input> & string>;
-
-export type PromptTemplate<Template extends string> = {
-  template: Template;
+export type PromptTemplateType<T extends string> = {
+  [K in ExtractVariables<T>]: any;
 };
 
-export function createPromptTemplate<Template extends string>(
-  template: Template
-): PromptTemplate<Template> {
-  return { template };
+export type PromptTemplate<T extends string> = {
+  template: T;
+  inputVariables: Array<keyof PromptTemplateType<T>>;
+};
+
+export function createPromptTemplate<T extends string>(
+  template: T
+): PromptTemplate<T> {
+  const inputVariables = [...template.matchAll(/{{(\w+)}}/g)].map(
+    (match) => match[1]
+  ) as Array<keyof PromptTemplateType<T>>;
+  return { template, inputVariables };
 }
 
-export function formatPrompt<
-  Template extends string,
-  TInput extends Record<string, unknown>
->(
-  promptTemplate: PromptTemplate<Template>,
-  input: ValidateTemplate<Template, TInput>
+export function formatPrompt<T extends string>(
+  promptTemplate: PromptTemplate<T>,
+  input: PromptTemplateType<T>
 ): string {
-  return promptTemplate.template.replace(/{(\w+)}/g, (_, key) => {
-    const typedKey = key as Extract<keyof TInput, string>;
-    return String((input as TInput)[typedKey]) || "";
+  return promptTemplate.template.replace(/{{(\w+)}}/g, (_, key) => {
+    const value = input[key as keyof PromptTemplateType<T>];
+    return value !== undefined ? String(value) : "";
   });
 }
-
-// export type PromptTemplate<TInput extends Record<string, string>> = {
-//   template: string;
-// };
-
-// export function createPromptTemplate<TInput extends Record<string, string>>(
-//   template: string
-// ): PromptTemplate<TInput> {
-//   return { template };
-// }
-
-// export function formatPrompt<TInput extends Record<string, string>>(
-//   promptTemplate: PromptTemplate<TInput>,
-//   input: TInput
-// ): string {
-//   return promptTemplate.template.replace(
-//     /{(\w+)}/g,
-//     (_, key) => String(input[key as keyof TInput]) || ""
-//   );
-// }
