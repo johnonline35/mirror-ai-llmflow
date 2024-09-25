@@ -52,7 +52,7 @@ flow.run({ name: "Charlie", age: "bob", balance: 1500 });
 flow.run({ name: "David", age: 35, balance: 2000, extra: true });
 ```
 
-The prompt template is also parsed, so not providing a value for age will result in a TypeScript error, as the age property is expected but missing.
+The prompt template is also parsed, so not providing a value for age will result in a TypeScript error, as the age property is expected but missing in the prompt string this example:
 
 ```typescript
 const flow = createLLMFlow<{name: string; age: number; balance: number;}>(
