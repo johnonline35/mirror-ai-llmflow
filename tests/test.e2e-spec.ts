@@ -31,7 +31,11 @@ describe("LLMFlow E2E Integration Tests", () => {
 
   it("should execute the LLM flow and format the prompt correctly", async () => {
     // Use createLLMFlow inline with TypeScript generics and empty object for type validation
-    const llmFlow = createLLMFlow(
+    const llmFlow = createLLMFlow<{
+      name: string;
+      age: number;
+      balance: number;
+    }>(
       "Hello {{name}}, you are {{age}} years old and your balance is {{balance}}",
       {
         model: "gpt-3.5-turbo-0125",
@@ -42,8 +46,8 @@ describe("LLMFlow E2E Integration Tests", () => {
 
     const result = await llmFlow.run({
       name: "Alice",
-      age: 20,
-      balance: "1000",
+      age: 30,
+      balance: 1000,
     });
 
     expect(result).toBe("Processed: Hello John, your balance is 1000");
