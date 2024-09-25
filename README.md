@@ -30,7 +30,7 @@ import { createLLMFlow } from 'llm-flow';
 
 Create an LLMFlow instance:
 ```typescript
-const flow = createLLMFlow(
+const llmFlow = createLLMFlow<{name: string; age: number; balance: number;}>(
       "Hello {{name}}, you are {{age}} years old and your balance is {{balance}}",
       {
         model: "gpt-3.5-turbo-0125",
@@ -76,7 +76,7 @@ LLMFlow can handle complex scenarios where structured output is required. This e
 ```typescript
 import { createLLMFlow } from 'llm-flow';
 
-const assessmentFlow = createLLMFlow(
+const assessmentFlow = createLLMFlow<{prompt: string; tools: string[]}>(
   `Assess whether the user prompt "{prompt}" is possible given the following tools: {tools}.
    Your response should include a valid JSON object with two keys:
    "success": boolean (true if the prompt is possible, false otherwise)
@@ -154,14 +154,13 @@ Simply pass the "dontParse" flag in the options and LLMFlow will return the raw 
 ```typescript
 import { createLLMFlow } from '@mirror-ai/llmflow';
 
-const flow = createLLMFlow<{ topic: string }, string>(
+const flow = createLLMFlow(
   "Write a short paragraph about {topic}",
   {
     model: 'gpt-4-2024-05-13',
     maxTokens: 100,
     dontParse: true,
   },
-  {} 
 );
 ```
 
@@ -172,7 +171,7 @@ LLMFlow allows you to specify options directly when creating a flow. Here's how 
 ```typescript
 import { createLLMFlow } from '@mirror-ai/llmflow';
 
-const flow = createLLMFlow<{ topic: string }, string>(
+const flow = createLLMFlow(
   "Write a short paragraph about {topic}",
   {
     model: 'gpt-4-2024-05-13',
@@ -185,7 +184,6 @@ const flow = createLLMFlow<{ topic: string }, string>(
     responseFormat: 'text',
     stream: false
   },
-  {} 
 );
 
 // Usage
@@ -209,7 +207,7 @@ console.log(result);
 ### JSON Output
 
 ```typescript
-const jsonFlow = createLLMFlow<{ key1: string, key2: string }, JsonOutputType>(
+const jsonFlow = createLLMFlow(
   "Generate a JSON object with {key1} and {key2}",
   {
     model: 'gpt-4-2024-05-13',
@@ -217,7 +215,6 @@ const jsonFlow = createLLMFlow<{ key1: string, key2: string }, JsonOutputType>(
     temperature: 0.5,
     responseFormat: 'json_object'
   },
-  {}
 );
 ```
 
@@ -242,7 +239,6 @@ const toolFlow = createLLMFlow<{ task: string }, string>(
     }],
     toolChoice: "auto"
   },
-  {}
 );
 ```
 
