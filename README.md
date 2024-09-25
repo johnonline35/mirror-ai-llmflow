@@ -48,8 +48,8 @@ flow.run({ name: "Alice", age: 30, balance: 1000 });
 // This will cause a TypeScript error (missing 'balance'):
 flow.run({ name: "Bob", age: 25 });
 
-// This will cause a TypeScript error (missing 'age'):
-flow.run({ name: "Charlie", balance: 1500 });
+// This will cause a TypeScript error (Type 'string' is not assignable to type 'number'.):
+flow.run({ name: "Charlie", age: "bob", balance: 1500 });
 
 // This will cause a TypeScript error (extra property 'extra'):
 flow.run({ name: "David", age: 35, balance: 2000, extra: true });
