@@ -86,7 +86,7 @@ LLMFlow can handle complex scenarios where structured output is required. This e
 import { createLLMFlow } from 'llm-flow';
 
 const assessmentFlow = createLLMFlow<{prompt: string; tools: string[]}>(
-  `Assess whether the user prompt "{prompt}" is possible given the following tools: {tools}.
+  `Assess whether the user prompt "{{prompt}}" is possible given the following tools: {{tools[]}}.
    Your response should include a valid JSON object with two keys:
    "success": boolean (true if the prompt is possible, false otherwise)
    "feedback": string (explanation of your assessment)`,
