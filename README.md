@@ -268,10 +268,9 @@ Prompts in LLMFlow are treated as parameters of a machine learning model. The pr
 LLMFlow offers automatic versioning and serialization of prompts through static and dynamic analysis. 
 Enable versioning to keep track of your prompt templates and LLM configurations:
 ```typescript
-const flowWithVersioning = createLLMFlow<{ topic: string; length: number }, string>(
+const flowWithVersioning = createLLMFlow<{ topic: string; length: number }>()(
   "Write a {length}-word paragraph about {topic}",
   { model: 'gpt-4-2024-05-13', maxTokens: 100 },
-{}, // Type validation object
 { versioningEnabled: true, storePath: './prompt-checkpoints' }
 );
 ```
