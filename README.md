@@ -167,8 +167,8 @@ import { createLLMFlow } from '@mirror-ai/llmflow';
 const flow = createLLMFlow<{ topic: string }>()(
   "Write a short paragraph about {topic}",
   {
-    model: 'gpt-4-2024-05-13',
-    maxTokens: 100,
+    // ... model ...
+    // ... maxTokens ...
     dontParse: true,
   },
 );
