@@ -300,7 +300,7 @@ type Models = "gpt-4o-2024-05-13" | "claude-3-opus-20240229" | /* ... other vali
 ### Custom Parsing
 By default, LLMFlow attempts to parse JSON responses. You can disable this:
 ```typescript
-const flow = createLLMFlow<InputType, string>(
+const flow = createLLMFlow<InputType>()(
 /* ... */,
 { dontParse: true, /* ... */ }
 );
@@ -312,8 +312,7 @@ LLMFlow leverages TypeScript's generic types to ensure type safety when defining
 ```typescript
 const flow = createLLMFlow<{ name: string; age: number }, UserProfile>()(
 "Generate a user profile for {name}, age {age}",
-{ model: 'gpt-4o-2024-05-13' },
-{} // Type validation object
+{ model: 'gpt-4o-2024-05-13' }
 );
 ```
 TypeScript ensures that:
