@@ -142,24 +142,14 @@ In this example, TypeScript ensures that the input to `run()` matches the struct
 * The library attempts to parse the LLM's response as JSON automatically. If parsing fails, it will return the raw string response.
 * Adjust the `maxTokens` and `temperature` settings as needed for your specific use case.
 * The actual output depends on the LLM's interpretation of the prompt. You may need to iterate on the prompt template to get consistently well-structured responses.
-* If you need to specify the output type explicitly (e.g., for more complex structures), you can do so when creating the flow:
-
-  ```typescript
-  const assessmentFlow = createLLMFlow<string>(
-    // ... prompt template ...
-    // ... options ...
-  );
-  ```
-
-  This tells TypeScript to treat the output as a string, which you can then parse manually if needed.
 
 By leveraging LLMFlow's capabilities, you can create complex, type-safe interactions with language models that produce structured data, making it easier to integrate LLM outputs into your applications.
 
 ### Turn JSON Auto-Parsing Off
 
-JSON parsing is turned on by default in LLMFlow. However you easily turn it off if you want to parse the response in a custom way (for example you might be using a custom LLM model that outputs in a specific way.) 
+JSON parsing is turned on by default in LLMFlow. However you easily turn it off if you want to parse the response in a custom way.
 
-Simply pass the "dontParse" flag in the options and LLMFlow will return the raw string from the LLM model of your choice:
+Simply pass the "dontParse" flag in the options. This tells TypeScript to treat the output as a string, which you can then parse manually if needed.
 
 ```typescript
 import { createLLMFlow } from '@mirror-ai/llmflow';
@@ -167,8 +157,7 @@ import { createLLMFlow } from '@mirror-ai/llmflow';
 const flow = createLLMFlow<{ topic: string }>()(
   "Write a short paragraph about {topic}",
   {
-    // ... model ...
-    // ... maxTokens ...
+    // ... options ...
     dontParse: true,
   },
 );
