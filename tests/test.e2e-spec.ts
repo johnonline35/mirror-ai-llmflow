@@ -31,12 +31,8 @@ describe("LLMFlow E2E Integration Tests", () => {
 
   it("should execute the LLM flow and format the prompt correctly", async () => {
     // Use createLLMFlow inline with TypeScript generics and empty object for type validation
-    const llmFlow = createLLMFlow<{
-      name: string;
-      age: number;
-      balance: number;
-    }>(
-      "Hello {{name}}, you are {{age}} years old and your balance is {{balance}}",
+    const flow = createLLMFlow<{ name: string; age: number }>()(
+      "Hello {{name}}, you are {{age}} years old. Here are your favorite websites.",
       {
         model: "gpt-3.5-turbo-0125",
         maxTokens: 50,
@@ -44,10 +40,10 @@ describe("LLMFlow E2E Integration Tests", () => {
       }
     );
 
-    const result = await llmFlow.run({
+    // Usage
+    flow.run({
       name: "Alice",
       age: 30,
-      balance: 1000,
     });
 
     expect(result).toBe("Processed: Hello John, your balance is 1000");
@@ -100,7 +96,7 @@ it("should save version when versioning is enabled", async () => {
 it("should handle the LLM response when dontParse is set to true", async () => {
   // Use createLLMFlow with dontParse option, TypeScript generics, and empty object
   const llmFlow = createLLMFlow(
-    "Hello {name}, your balance is {balance}", // Template inline
+    "Hello {{name}}, your balance is {{balance}}", // Template inline
     {
       model: "gpt-3.5-turbo-0125", // Options inline
       maxTokens: 50,

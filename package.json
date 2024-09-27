@@ -1,6 +1,6 @@
 {
   "name": "@mirror-ai/llmflow",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "LLMFlow is a TypeScript-native library for seamless integration, orchestration, and management of Large Language Models (LLMs).",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
