@@ -55,7 +55,7 @@ flow.run({ name: "David", age: 35, balance: 2000, extra: true });
 The prompt template is also parsed, so not providing a value for age will result in a TypeScript error, as the age property is expected but missing in the prompt string this example:
 
 ```typescript
-const flow = createLLMFlow<{name: string; age: number; balance: number;}>(
+const flow = createLLMFlow<{name: string; age: number; balance: number;}>()(
 "Hello {{name}}, you are age years old and your balance is {{balance}}")
 ```
 Will create this error:
@@ -86,7 +86,7 @@ LLMFlow can handle complex scenarios where structured output is required. This e
 ```typescript
 import { createLLMFlow } from 'llm-flow';
 
-const assessmentFlow = createLLMFlow<{prompt: string; tools: string[]}>(
+const assessmentFlow = createLLMFlow<{prompt: string; tools: string[]}>()(
   `Assess whether the user prompt "{{prompt}}" is possible given the following tools: {{tools[]}}.
    Your response should include a valid JSON object with two keys:
    "success": boolean (true if the prompt is possible, false otherwise)
@@ -164,7 +164,7 @@ Simply pass the "dontParse" flag in the options and LLMFlow will return the raw 
 ```typescript
 import { createLLMFlow } from '@mirror-ai/llmflow';
 
-const flow = createLLMFlow(
+const flow = createLLMFlow<{ topic: string }>()(
   "Write a short paragraph about {topic}",
   {
     model: 'gpt-4-2024-05-13',
@@ -181,7 +181,7 @@ LLMFlow allows you to specify options directly when creating a flow. Here's how 
 ```typescript
 import { createLLMFlow } from '@mirror-ai/llmflow';
 
-const flow = createLLMFlow(
+const flow = createLLMFlow<{ topic: string }>()(
   "Write a short paragraph about {topic}",
   {
     model: 'gpt-4-2024-05-13',
@@ -217,7 +217,7 @@ console.log(result);
 ### JSON Output
 
 ```typescript
-const jsonFlow = createLLMFlow(
+const jsonFlow = createLLMFlow<{ key1: string; key2: string }>()(
   "Generate a JSON object with {key1} and {key2}",
   {
     model: 'gpt-4-2024-05-13',
@@ -231,7 +231,7 @@ const jsonFlow = createLLMFlow(
 ### Tool Calling
 
 ```typescript
-const toolFlow = createLLMFlow<{ task: string }, string>(
+const toolFlow = createLLMFlow<{ task: string }>()(
   "Use available tools to {task}",
   {
     model: 'gpt-4-2024-05-13',
@@ -255,7 +255,7 @@ const toolFlow = createLLMFlow<{ task: string }, string>(
 ### Streaming
 
 ```typescript
-const streamingFlow = createLLMFlow<{ topic: string }, string>(
+const streamingFlow = createLLMFlow<{ topic: string }>()(
   "Generate a story about {topic}",
   {
     model: 'gpt-4-2024-05-13',
@@ -322,7 +322,7 @@ When `dontParse` is true, TypeScript ensures the output type is `string`.
 ### 1. Type-Safe Prompt Templates
 LLMFlow leverages TypeScript's generic types to ensure type safety when defining prompt templates:
 ```typescript
-const flow = createLLMFlow<{ name: string; age: number }, UserProfile>(
+const flow = createLLMFlow<{ name: string; age: number }, UserProfile>()(
 "Generate a user profile for {name}, age {age}",
 { model: 'gpt-4o-2024-05-13' },
 {} // Type validation object
@@ -344,7 +344,7 @@ Methods and properties of the `LLMFlow` class
 TypeScript catches potential errors at compile-time:
 ```typescript
 // TypeScript will catch these errors:
-const flow = createLLMFlow<{ topic: number }, string>( // Error: 'topic' should be string
+const flow = createLLMFlow<{ topic: number }, string>()( // Error: 'topic' should be string
 "Write about {topic}",
 { model: 'invalid-model' } // Error: 'invalid-model' is not a valid model option
 );
@@ -362,7 +362,7 @@ const flow = createLLMFlow<
   Template extends string,
   TInput extends Record<string, unknown> = Record<string, string>,
   TOutput = string
->(
+>()(
   template: Template,
   options: LLMOptions,
   input: ValidateTemplate<Template, TInput>,
