@@ -104,7 +104,7 @@ This creates a flow that:
 * Instructs the LLM to assess the feasibility of the prompt
 * Returns a JSON object with `success` and `feedback` fields
 
-TypeScript automatically infers the input type from the template string, ensuring type safety at compile-time.
+TypeScript is enforcing type safety based on the explicit generic type provided ({prompt: string; tools: string[]})
 
 ## Running the Flow
 
